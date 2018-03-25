@@ -8,24 +8,26 @@ public class phase2driver {
 	/**
 	 * @param args
 	 */
-	public static void displayMenu() {
-		System.out.println("        Welcome to UUber System     ");
-		System.out.println("1. Registration:");
-		System.out.println("2. Reserve:");
-		System.out.println("3. New UC:");
-		System.out.println("4. Rides:");
-		System.out.println("5. Favorite Recordings:");
-		System.out.println("6. Feedback Recordings:");
-		System.out.println("7. Usefulness Ratings:");
-		System.out.println("8. Trust recordings:");
-		System.out.println("9. UC Browsing:");
-		System.out.println("10. Useful feedbacks:");
-		System.out.println("11. UC suggestions:");
-		System.out.println("12. ï¿½Two degrees of separationï¿½:");
-		System.out.println("13.  Statistics:");
-		System.out.println("14. User awards:");
-		System.out.println("15. ABORT:");
-		System.out.println("please enter your choice:");
+
+	public static void displayMenu()
+	{
+		 System.out.println("        Welcome to UUber System     ");
+    	 System.out.println("1. Registration:");
+    	 System.out.println("2. Reserve:");
+    	 System.out.println("3. New UC:");
+    	 System.out.println("4. Rides:");
+    	 System.out.println("5. Favorite Recordings:");
+    	 System.out.println("6. Feedback Recordings:");
+    	 System.out.println("7. Usefulness Ratings:");
+    	 System.out.println("8. Trust recordings:");
+    	 System.out.println("9. UC Browsing:");
+    	 System.out.println("10. Useful feedbacks:");
+    	 System.out.println("11. UC suggestions:");
+    	 System.out.println("12. ‘Two degrees of separation’:");
+    	 System.out.println("13.  Statistics:");
+    	 System.out.println("14. User awards:");
+    	 System.out.println("15. DISCONNECT/'LOG OUT OF USER SESSION':");
+    	 System.out.println("please enter your choice:");
 	}
 
 	public static void main(String[] args) {
@@ -189,7 +191,91 @@ public class phase2driver {
 
 						}
 					}
-				} else if (c == 7) {
+				} 
+
+				 else if (c==2)
+            	 {	 
+            		 System.out.println("please enter your query below:");
+            		 while ((sql = in.readLine()) == null && sql.length() == 0)
+            			 System.out.println(sql);
+            		 ResultSet rs=con.stmt.executeQuery(sql);
+            		 ResultSetMetaData rsmd = rs.getMetaData();
+            		 int numCols = rsmd.getColumnCount();
+            		 while (rs.next())
+            		 {
+            			 //System.out.print("cname:");
+            			 for (int i=1; i<=numCols;i++)
+            				 System.out.print(rs.getString(i)+"  ");
+            			 System.out.println("");
+            		 }
+            		 System.out.println(" ");
+            		 rs.close();
+            	 }
+            	
+            	 // FINISHED - Michael
+            	 // New UC: A user may record the details of a new UC, and may update the information regarding
+            	 //an existing UC he/she owns. 
+            	 // *NOTE I'M ASSUMING THAT THE USER ONLY KNOWS HIS/HER LOGIN, THIS MAKES IT THE ONE HE/SHE 'OWNS'
+            	 else if (c==3)
+            	 {	 
+            		 String arguments = "";
+            		 System.out.println("please enter: vin category make model year login");
+            		 while ((arguments = in.readLine()) == null && arguments.length() == 0);
+            	     String[] arg_arr = arguments.split("\\s+");
+            	     NewUC new_uc = new NewUC();
+            	     System.out.println(new_uc.updateNewUberCar(Integer.parseInt(arg_arr[0]),arg_arr[1],arg_arr[2],arg_arr[3],Integer.parseInt(arg_arr[4]),arg_arr[5],con.stmt, in));
+            	 } 
+            	 
+            	 //FINISHED - Michael
+            	 /*Rides: A user can record a ride with a UC (the same user may ride the same UC multiple times).
+            	 Each user session (meaning each time after a user has logged into the system) may add one or more rides,
+            	 and all rides added by a user in a user session are reported to him/her for the final review and confirmation,
+            	 before they are added into the database. Note that a user may only record a ride at a UC during a period
+            	 that the associated UD is available
+            	 */
+            	 else if (c==4)
+            	 {	 
+            		 String arguments = "";
+            		 System.out.println("please enter: rid cost date from to login vin (date in form 1000-01-01, driver login, car vin");
+            		 while ((arguments = in.readLine()) == null && arguments.length() == 0);
+            	     String[] arg_arr = arguments.split("\\s+");
+            	     Rides rides = new Rides();
+            	     System.out.println(rides.recordRide(Integer.parseInt(arg_arr[0]),Integer.parseInt(arg_arr[1]),arg_arr[2],arg_arr[3],arg_arr[4],arg_arr[5],Integer.parseInt(arg_arr[6]),con.stmt, in));
+            	 }
+            	 
+            	 //FINISHED - Michael
+            	 /* Favorite recordings: Users can declare a UC as his/her favorite car to hire
+            	  */
+            	 else if (c==5)
+            	 {	 
+            		 String arguments = "";
+            		 System.out.println("please enter for favoriting an uber car: fid vin login (vin of uber car, user login)");
+            		 while ((arguments = in.readLine()) == null && arguments.length() == 0);
+            	     String[] arg_arr = arguments.split("\\s+");
+            	     UFavoriteUC u_fav_uc = new UFavoriteUC();
+            	     System.out.println(u_fav_uc.favoriteUC(Integer.parseInt(arg_arr[0]),Integer.parseInt(arg_arr[1]),arg_arr[2],con.stmt));
+            	 }
+            	 
+            	 /* FINISHED - Michael
+            	  * Users can record their feedback for a UC. We should record the date, the
+					numerical score (0= terrible, 10= excellent), and an optional short text. No changes are allowed; only one
+					feedback per user per UC is allowed.
+            	  */
+            	 else if (c==6)
+            	 {	 
+            		 String arguments = "";
+            		 String text = "";
+            		 System.out.println("please first enter for providing feedback: text (message to provide feedback)");
+            		 while ((text = in.readLine()) == null && text.length() == 0);
+            		 System.out.println("please now enter for providing feedback: fid score date login vin (date in form 1000-01-01)");
+            		 while ((arguments = in.readLine()) == null && arguments.length() == 0);
+            	     String[] arg_arr = arguments.split("\\s+");
+            	     Feedback fb = new Feedback();
+            	     //public String favoriteUC(int fid, String utext, int uscore, String udate, String ulogin, int vin, Statement stmt)
+            	     System.out.println(fb.feedback(Integer.parseInt(arg_arr[0]), text, Integer.parseInt(arg_arr[1]),arg_arr[2],arg_arr[3], Integer.parseInt(arg_arr[4]),con.stmt));
+            	 }
+
+				else if (c == 7) {
 					String login = "";
 					String fid = "";
 					String rating = "";
@@ -350,6 +436,7 @@ public class phase2driver {
 					/* ignore close errors */ }
 			}
 		}
+
 	}
 }
 

@@ -1,14 +1,10 @@
 package cs5530;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
 
+/* Registration: Registration: a new user (either UD or UU) has to provide the appropriate information;
+he/she can pick a login-name and a password. The login name should be checked for uniqueness.
+*/
 public class Registration {
 		public Registration()
 		{}
